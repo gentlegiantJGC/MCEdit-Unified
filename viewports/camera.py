@@ -2089,7 +2089,10 @@ class CommandBlockInfoParser(BlockInfoParser):
             if value:
                 if len(value) > 1500:
                     return "{}\n**COMMAND IS TOO LONG TO SHOW MORE**{}{}".format(value[:1500], self.nbt_ending, self.edit_ending)
-                return "{}{}{}".format(value, self.nbt_ending, self.edit_ending)
+                try:
+                    return "{}{}{}".format(value, self.nbt_ending, self.edit_ending)
+                except:
+                    return "Command Parsing Failed"
         return "[Empty Command Block]{}{}".format(self.nbt_ending, self.edit_ending)
     
 class ContainerInfoParser(BlockInfoParser):
