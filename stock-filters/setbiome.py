@@ -159,7 +159,10 @@ def perform(level, box, options):
         for z in xrange(minz, box.maxz, 16):
             # Pocket chunks root tag don't have any 'Level' member
             # But a 'Biome' member instead.
-            chunk = level.getChunk(x / 16, z / 16)
+            try:
+                chunk = level.getChunk(x / 16, z / 16)
+            except:
+                continue
             chunk.dirty = True
             chunk_root_tag = None
             if chunk.root_tag and 'Level' in chunk.root_tag.keys() and 'Biomes' in chunk.root_tag["Level"].keys():
