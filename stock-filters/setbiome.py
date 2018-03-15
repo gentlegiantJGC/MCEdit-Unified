@@ -14,7 +14,7 @@ from pymclevel import TAG_String
 from numpy import zeros, fromstring
 
 inputs = (
-    ("Biome",  ("Ocean",
+    ("Biome",  tuple(sorted(("Ocean",
                 "Plains",
                 "Desert",
                 "Extreme Hills",
@@ -78,7 +78,7 @@ inputs = (
                 "Mesa Plateau F M",
                 "Mesa Plateau M",
                 "(Uncalculated)",
-    )),
+    )))),
 )
 
 biomes = {
