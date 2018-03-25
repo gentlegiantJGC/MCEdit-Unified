@@ -2127,7 +2127,8 @@ class PocketLeveldbChunk1Plus(LightedChunk):
             self.subchunks.append(subchunk)
 
             version, terrain = ord(terrain[:1]), terrain[1:]
-            self.subchunks_versions[subchunk] = version
+            if version in [0,2,3,4,5,6,7]:
+                version = 0
 
             if version == 0:
                 blocks, terrain = terrain[:4096], terrain[4096:]
@@ -2136,7 +2137,7 @@ class PocketLeveldbChunk1Plus(LightedChunk):
                 blockLight, terrain = terrain[:2048], terrain[2048:]
 
             elif version == 1:
-                pass
+                version = 0
                 bytesPerBlock, terrain = ord(terrain[:1]) >> 1, terrain[1:]
                 blocksPerWord = int(floor(32 / bytesPerBlock))
                 wordCount = int(ceil(4096 / float(blocksPerWord)))
@@ -2172,6 +2173,8 @@ class PocketLeveldbChunk1Plus(LightedChunk):
                 blockLight = ''
             else:
                 raise Exception('{} is an unsupported sub-chunk version found in chunk {},{} (x,z),y'.format(version,(self.chunkPosition),subchunk))
+                
+            self.subchunks_versions[subchunk] = version
 
             # 'Computing' data is needed before sending it to the data holders.
             self._Blocks.add_data(subchunk, blocks)
