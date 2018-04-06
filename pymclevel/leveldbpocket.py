@@ -2139,12 +2139,14 @@ class PocketLeveldbChunk1Plus(LightedChunk):
 
             elif version in [1, 8]:
                 if version == 8:
-                    unknown, terrain = terrain[:1], terrain[1:]
-                version = 0
+                    storageCount, terrain = ord(terrain[:1]), terrain[1:]
+                else:
+                    storageCount = 1
                 bytesPerBlock, terrain = ord(terrain[:1]) >> 1, terrain[1:]
                 blocksPerWord = int(floor(32 / bytesPerBlock))
                 wordCount = int(ceil(4096 / float(blocksPerWord)))
                 _blocks, terrain = terrain[:wordCount * 4], terrain[wordCount * 4:]
+                _extraBlocks, terrain = terrain[:wordCount * 4 * (storageCount-1)], terrain[wordCount * 4 * (storageCount-1):]
                 palletSize, _pallet = terrain[:4], terrain[4:]
                 pallet = loadNBTCompoundList(_pallet)
                 blocks = []
@@ -2174,6 +2176,7 @@ class PocketLeveldbChunk1Plus(LightedChunk):
                     data += chr((_data[d+1] << 4) + _data[d])
                 skyLight = ''
                 blockLight = ''
+                version = 0
             else:
                 raise Exception('{} is an unsupported sub-chunk version found in chunk {},{} (x,z),y'.format(version,(self.chunkPosition),subchunk))
                 
