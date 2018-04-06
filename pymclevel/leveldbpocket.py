@@ -2153,12 +2153,10 @@ class PocketLeveldbChunk1Plus(LightedChunk):
                 data = []
                 mask = 2**bytesPerBlock - 1
                 for wordNumber in range(wordCount):
-                    wordBlocks = []
                     word = struct.unpack("<I",_blocks[wordNumber*4:4+wordNumber*4])[0]
                     for blockNumber in range(blocksPerWord):
                         blocks.append(word & mask)
                         word = word >> bytesPerBlock
-                    blocks += wordBlocks[::-1]
                 _blocks = blocks[:4096]
                 blocks = ''
                 for b in _blocks:
