@@ -2136,7 +2136,10 @@ class PocketLeveldbChunk1Plus(LightedChunk):
                 skyLight, terrain = terrain[:2048], terrain[2048:]
                 blockLight, terrain = terrain[:2048], terrain[2048:]
 
-            elif version == 1:
+
+            elif version in [1, 8]:
+                if version == 8:
+                    unknown, terrain = terrain[:1], terrain[1:]
                 version = 0
                 bytesPerBlock, terrain = ord(terrain[:1]) >> 1, terrain[1:]
                 blocksPerWord = int(floor(32 / bytesPerBlock))
@@ -2168,7 +2171,7 @@ class PocketLeveldbChunk1Plus(LightedChunk):
                 _data = data[:]
                 data = ''
                 for d in range(0,len(_data),2):
-                    data += chr((_data[d] << 4) + _data[d+1])
+                    data += chr((_data[d+1] << 4) + _data[d])
                 skyLight = ''
                 blockLight = ''
             else:
