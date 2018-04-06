@@ -2142,8 +2142,8 @@ class PocketLeveldbChunk1Plus(LightedChunk):
                     storageCount, terrain = ord(terrain[:1]), terrain[1:]
                 else:
                     storageCount = 1
-                bytesPerBlock, terrain = ord(terrain[:1]) >> 1, terrain[1:]
-                blocksPerWord = int(floor(32 / bytesPerBlock))
+                bitsPerBlock, terrain = ord(terrain[:1]) >> 1, terrain[1:]
+                blocksPerWord = int(floor(32 / bitsPerBlock))
                 wordCount = int(ceil(4096 / float(blocksPerWord)))
                 _blocks, terrain = terrain[:wordCount * 4], terrain[wordCount * 4:]
                 _extraBlocks, terrain = terrain[:wordCount * 4 * (storageCount-1)], terrain[wordCount * 4 * (storageCount-1):]
@@ -2151,12 +2151,12 @@ class PocketLeveldbChunk1Plus(LightedChunk):
                 pallet = loadNBTCompoundList(_pallet)
                 blocks = []
                 data = []
-                mask = 2**bytesPerBlock - 1
+                mask = 2**bitsPerBlock - 1
                 for wordNumber in range(wordCount):
                     word = struct.unpack("<I",_blocks[wordNumber*4:4+wordNumber*4])[0]
                     for blockNumber in range(blocksPerWord):
                         blocks.append(word & mask)
-                        word = word >> bytesPerBlock
+                        word = word >> bitsPerBlock
                 _blocks = blocks[:4096]
                 blocks = ''
                 for b in _blocks:
